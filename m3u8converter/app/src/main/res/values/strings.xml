@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">m3u8批量转换</string>
+    <string name="action_settings">关于</string>
+    <string name="app_introduction">\"m3u8批量转换\"是一个能够将
+                                    （加密）HLS音视频流缓存文件
+                                    转换成普通MP4视频文件的工具，
+                                    支持：\n
+                                    1.UC浏览器、QQ浏览器文件夹搜索\n
+                                    2.全盘文件夹搜索\n
+                                    3.多个m3u8文件多选和批量转换\n
+                                    少量转换用QQ浏览器自带的就可以了\n
+                                    重度用户建议使用本APP</string>
+</resources>

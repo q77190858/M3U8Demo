@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/num"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="8"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="序号" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="85"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/fullpath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="m3u8文件路径"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="20sp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|left"
+                android:layout_weight="1"
+                android:text="状态"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/timeLength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|left"
+                android:layout_marginLeft="5sp"
+                android:layout_weight="1"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/widthHeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|left"
+                android:layout_marginLeft="5sp"
+                android:layout_weight="1"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/codec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|left"
+                android:layout_marginLeft="5sp"
+                android:layout_weight="1"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/fileNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|left"
+                android:layout_marginLeft="5sp"
+                android:layout_weight="1"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginRight="4sp"
+        android:layout_weight="10"
+        android:checked="true" />
+</LinearLayout>

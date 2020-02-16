@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".About">
+
+    <TextView
+        android:id="@+id/aboutApp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="40sp"
+        android:paddingTop="10sp"
+        android:paddingBottom="10sp"
+        android:text="关于APP"
+        android:textColor="@android:color/primary_text_light"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#282A34" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="60sp"
+        app:srcCompat="@mipmap/ic_launcher"
+        tools:layout_editor_absoluteX="411dp"
+        tools:layout_editor_absoluteY="147dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="249dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="50sp"
+        android:layout_marginTop="20sp"
+        android:layout_marginRight="50sp"
+        android:text="@string/app_introduction" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20sp"
+        android:background="#282A34" />
+
+    <TextView
+        android:id="@+id/aboutApp2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="40sp"
+        android:paddingTop="10sp"
+        android:paddingBottom="10sp"
+        android:text="关于作者"
+        android:textColor="@android:color/primary_text_light"
+        android:textSize="18sp" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#282A34" />
+
+    <TextView
+        android:id="@+id/aboutApp3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="40sp"
+        android:paddingTop="8sp"
+        android:paddingBottom="8sp"
+        android:text="微博：孟诗远q77190858" />
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#282A34" />
+
+    <TextView
+        android:id="@+id/aboutBlog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="40sp"
+        android:paddingTop="8sp"
+        android:paddingBottom="8sp"
+        android:text="梦想失落乐园de博客：blog.mxslly.com" />
+
+    <View
+        android:id="@+id/view5"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#282A34" />
+
+    <TextView
+        android:id="@+id/aboutUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="40sp"
+        android:paddingTop="8sp"
+        android:paddingBottom="8sp"
+        android:text="获取更新：blog.mxslly.com" />
+
+</LinearLayout>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spingarr">
+    <item>1个任务</item>
+<!--    <item>2个任务</item>-->
+<!--    <item>4个任务</item>-->
+<!--    <item>6个任务</item>-->
+<!--    <item>8个任务</item>-->
+<!--    <item>10个任务</item>-->
+    </string-array>
+</resources>

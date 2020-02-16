@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp">
+
+        <TextView
+            android:id="@+id/textViewScanPath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:outlineProvider="bounds"
+            android:paddingLeft="10sp"
+            android:paddingTop="5sp"
+            android:paddingRight="10sp"
+            android:paddingBottom="5sp"
+            android:text="扫描文件夹:"
+            android:translationZ="3dp" />
+
+        <LinearLayout
+            android:id="@+id/panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="3dp"
+            android:orientation="horizontal"
+            android:outlineProvider="bounds"
+            android:translationZ="3dp"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal">
+
+                    <RadioButton
+                        android:id="@+id/checkBoxScanUC"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="扫描UC浏览器文件夹" />
+
+                    <RadioButton
+                        android:id="@+id/checkBoxScanQQ"
+                        android:layout_width="wrap_content"
+                        android:layout_height="42dp"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:text="扫描QQ浏览器文件夹" />
+
+                    <RadioButton
+                        android:id="@+id/checkBoxScanOther"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="扫描自定义文件夹" />
+                </RadioGroup>
+
+                <Button
+                    android:id="@+id/buttonStartScan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:text="开始扫描" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginRight="10sp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_marginLeft="20sp"
+                    android:layout_marginBottom="7sp"
+                    android:layout_weight="1"
+                    android:text="同时最大处理任务数："
+                    android:textColor="@android:color/primary_text_light" />
+
+                <Spinner
+                    android:id="@+id/spinnerMaxCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginBottom="7sp"
+                    android:layout_weight="1"
+                    android:entries="@array/spingarr" />
+
+                <CheckBox
+                    android:id="@+id/checkBoxDeleteOld"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:text="转换完成后删除原文件" />
+
+                <Button
+                    android:id="@+id/buttonStartConvert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:text="开始转换" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
