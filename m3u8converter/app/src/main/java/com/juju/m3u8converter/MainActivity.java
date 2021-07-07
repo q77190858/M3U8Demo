@@ -52,8 +52,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RadioButton checkBoxUC;
     RadioButton checkBoxQQ;
     RadioButton checkBoxOther;
+    RadioButton radioButtonUseFFmpeg;
+    RadioButton radioButtonUseJava;
     CheckBox checkBoxDelOld;
-    Spinner spinnerMaxCount;
     Button buttonScan;
     Button buttonConvert;
     ArrayList<M3u8File> waitingList;
@@ -95,8 +96,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         checkBoxQQ=findViewById(R.id.checkBoxScanQQ);
         checkBoxOther=findViewById(R.id.checkBoxScanOther);
         checkBoxDelOld=findViewById(R.id.checkBoxDeleteOld);
-        spinnerMaxCount=findViewById(R.id.spinnerMaxCount);
-        spinnerMaxCount.setSelection(0,true);
+        radioButtonUseFFmpeg=findViewById(R.id.radioButtonUseFFmpeg);
+        radioButtonUseJava=findViewById(R.id.radioButtonUseJava);
         buttonScan=findViewById(R.id.buttonStartScan);
         buttonConvert=findViewById(R.id.buttonStartConvert);
 
@@ -269,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void startConvert()
     {
-        int maxCount=spinnerMaxCount.getSelectedItemPosition()==0?1:spinnerMaxCount.getSelectedItemPosition()*2;
+        int maxCount=1;
         Log.d("startConvert", "maxCount: "+String.valueOf(maxCount));
         waitingList.clear();
         count=0;
@@ -299,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     public void onConvertFineshed()
     {
-        int maxCount=spinnerMaxCount.getSelectedItemPosition()==0?1:spinnerMaxCount.getSelectedItemPosition()*2;
+        int maxCount=1;
         if(!waitingList.isEmpty())
         {
             waitingList.remove(0).startConvert(MainActivity.this);
@@ -391,24 +392,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             externalStoragePath = Environment.getExternalStorageDirectory().getAbsolutePath();
         }
     }
-//    public String getPath(Uri uri) {
-//        if ("content".equalsIgnoreCase(uri.getScheme())) {
-//            String[] projection = {"_data"};
-//            Cursor cursor = null;
-//            try {
-//                cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
-//                int column_index = cursor.getColumnIndexOrThrow("_data");
-//                if (cursor.moveToFirst()) {
-//                    return cursor.getString(column_index);
-//                }
-//            } catch (Exception e) {
-//             e.printStackTrace();
-//            }
-//        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-//            return uri.getPath();
-//        }
-//        return null;
-//    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -430,9 +414,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
-
-
 }

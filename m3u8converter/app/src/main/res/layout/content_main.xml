@@ -88,25 +88,24 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:layout_marginLeft="20sp"
-                    android:layout_marginBottom="7sp"
-                    android:layout_weight="1"
-                    android:text="同时最大处理任务数："
-                    android:textColor="@android:color/primary_text_light" />
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
 
-                <Spinner
-                    android:id="@+id/spinnerMaxCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginBottom="7sp"
-                    android:layout_weight="1"
-                    android:entries="@array/spingarr" />
+                    <RadioButton
+                        android:id="@+id/radioButtonUseFFmpeg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="使用ffmpeg转码" />
+
+                    <RadioButton
+                        android:id="@+id/radioButtonUseJava"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="使用java转码" />
+                </RadioGroup>
 
                 <CheckBox
                     android:id="@+id/checkBoxDeleteOld"

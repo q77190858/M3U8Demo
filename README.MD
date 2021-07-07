@@ -1,5 +1,11 @@
 # M3U8批量转换开发总结
 
+废话不多说，先上图
+
+![首页](Screenshot_20210707_105925_com.juju.m3u8converter.jpg)
+
+![关于](Screenshot_20210707_105935_com.juju.m3u8converter.jpg)
+
 ## 开发时间表  
 
 + 2020年1月13日  
@@ -9,7 +15,9 @@
 + 2020年2月10日  
 开始制作最终版UI，结合前期完成的cpp层应用内核，制作第一版M3U8批量转换
 + 2020年2月16日  
-发布第一版app  
+发布第一版app
++ 2021年7月7日  
+添加纯java解密合并m3u8功能,发布第二版app  
 
 ## 背景知识  
 
@@ -95,7 +103,7 @@ android {
 
 这里主要是java层的开发，不会的百度谷歌一下就可，直接上界面图
 
-![m3u8demo界面图](m3u8demo.jpeg)
+![m3u8demo界面图](m3u8demo1.jpg)
 
 ## java层调用c层实现m3u8视频的格式转换
 
@@ -263,6 +271,7 @@ Java_com_juju_m3u8converter_FFmpegCmd_retrieveInfo(JNIEnv *env, jclass clazz, js
     return env->NewStringUTF(result.c_str());
 }
 ```
+
 ## 对一个坑的回忆
 
 这个地方我踩到了一个坑，根据ffmpeg官方文档
@@ -371,6 +380,14 @@ while (true)
 2. 不懂的话多看看别人的代码，看看大神们是怎么写的，他们不一定会像我这样写技术文档，知识都在代码中
 
 3. 这次开发经历，学习了android-studio的使用，学习了android-java知识，学习了ffmpeg的编译和调用，历时两个月，过得很充实，最后做出了成果，很有成就感
+
+## java解析m3u8文件
+
+我参考了ffmpeg源代码里面的hls.c来写java，同时参考了网络上的一些对m3u8标签的解析博客和[RFC 8216 HTTP Live Streaming](https://datatracker.ietf.org/doc/rfc8216/)标准，最终比较完美全面地完成了对m3u8标签的解析。
+
+由于java不支持aes-128的加密解密，我参考这个博客[java下载m3u8视频，解密并合并ts](https://blog.csdn.net/qq494257084/article/details/103550171)引入第三方`bcprov-jdk16-139.jar`进行解密
+
+目前java解密存在对SAMPLE-AES加密方式无法处理的情况，我还没自己研究这个加密方式，不过目前看来这个加密方式碰到的比较少，如果碰到了就使用ffmpeg方式转码吧
 
 ## 项目代码和demo.apk查看和下载
 [https://github.com/q77190858/m3u8demo](https://github.com/q77190858/m3u8demo)

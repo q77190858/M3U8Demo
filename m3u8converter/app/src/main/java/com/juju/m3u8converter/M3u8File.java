@@ -1,19 +1,32 @@
 package com.juju.m3u8converter;
 
 import android.util.Log;
-
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 /*处理m3u8文件的核心类*/
 public class M3u8File {
+    //引入ffmepg库
+    static {
+        System.loadLibrary("ffmpeg");
+        System.loadLibrary("ffmpeg-cmd");
+    }
+
+    //native执行FFmpeg命令
+    private static native int exec(int cmdLen, String[] cmd);
+    //获取命令执行进度,已转换的帧数
+    private static native int getProgress();
+    //获取转码速率
+    private static native double getSpeed();
+    //获取视频信息
+    public static native String retrieveInfo(String path);
+
     public String status;//状态：就绪、正在转换、完成
     public String fullPath;//m3u8文件的路径
     public String convertedFullPath;//转换后应该放置的路径
@@ -29,118 +42,71 @@ public class M3u8File {
     int height;//画面高度
     String videoCodec;//编码器
     int frames;//m3u8视频的总帧数，=timelength*fps
-    Map<String,String> keyMap;//如果加密则keyMap.size不为0
-    public M3u8File(String path)
+    public M3u8File(String path) throws Exception
     {
         //初始化变量
-        this.status="就绪";
-        this.fullPath=path;
-        this.convertedFullPath=path.replaceAll("(.+)\\.(m|M)3(u|U)8", "$1")+".mp4";
-        this.videoList=new ArrayList<>();
-        this.fileNum=0;
-        this.fps=0;
-        this.timeLength=0;
-        this.isChecked=true;
-        this.rotation=0;
-        this.width=0;
-        this.height=0;
-        this.videoCodec=null;
-        this.keyMap=new HashMap<>();
-        //读取m3u8文件内容
-        BufferedReader reader = null;
+        status="就绪";
+        fullPath=path;
+        convertedFullPath=path.replaceAll("(.+)\\.(m|M)3(u|U)8", "$1")+".mp4";
+        videoList=new ArrayList<>();
+        fileNum=0;
+        fps=0;
+        timeLength=0;
+        isChecked=true;
+        rotation=0;
+        width=0;
+        height=0;
+        videoCodec=null;
         try {
-            FileReader freader = new FileReader(path);
-            reader = new BufferedReader(freader);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String line = null;
-        String absp = null, datadir = null;
-        //循环读取每一行
-        while (true)
-        {
-            try {
-                line = reader.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if(line.startsWith("#"))//#开头说明为标签
-            {
-                if (line == null || line.equals("#EXT-X-ENDLIST"))
-                    break;
-                    // 如果有#EXT-X-KEY匹配，说明是加密的视频，获得keymap
-                else if (line.matches("#EXT-X-KEY:.*")) {
-                    String s = line.replaceAll("#EXT-X-KEY:(.*)", "$1");
-                    // System.out.println("key:"+s);
-                    String[] sarray = s.split(",");
-                    for (int i = 0; i < sarray.length; i++) {
-                        String[] kv = sarray[i].split("=");
-                        if (kv[0].equals("URI")) {
-                            String kpath = kv[1].replaceAll("\"(\\w://)?(.*)\"", "$2");
-                            kv[1] = kpath;
-                        }
-                        keyMap.put(kv[0], kv[1]);
-                    }
-                }
-//                else if (line.matches("#EXTINF:.*")) {//放弃解析#EXTINF:来获得视频时长，因为inf后跟时长是可选的
-//                    // 计算视频时间长度
-//                    String s = line.replaceAll("#EXTINF:(.*),", "$1");
-//                    double tlength = Double.valueOf(s);
-//                    this.timeLength += tlength;
-//                    // 读取视频路径
-//                    try {
-//                        line = reader.readLine();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-            }
-            else if(line.matches("(\\w+://)?(/.*)"))//满足此正则就是文件的URI
-            {
-                // 匹配获得单个视频文件的绝对路径
-                absp = line.replaceAll("(\\w+://)?(/.*)", "$2");
-                File f=new File(absp);
-                if(!f.exists()||!f.canRead())status="损坏";
-                this.videoList.add(absp);
-            }
-        }
-        try {
-            reader.close();
             //使用ffmpeg的retrieveInfo函数解析第一个分片视频的信息
             //不管是m3u8文件还是视频文件，都直接用这个函数解析
-            String info=FFmpegCmd.retrieveInfo(fullPath);
-//            if(keyMap.size()==0)
-//                info=FFmpegCmd.retrieveInfo(videoList.get(0));//未加密，直接读取第一个分片文件
-//            else//加密了，直接输入m3u8文件
-//            {
-//                ArrayList<String> cmd=new ArrayList<>();
-//                cmd.add("ffmpeg");
-//                cmd.add("-allowed_extensions");
-//                cmd.add("ALL");
-//                cmd.add("-i");
-//                cmd.add(fullPath);
-//                FFmpegCmd.run(cmd);
-//                info=FFmpegCmd.retrieveInfo(fullPath);
-//            }
+            String info=retrieveInfo(fullPath);
             Log.d(fullPath, "M3u8File: "+info);
             //Log.d(fullPath, "this.videoList.get(0) "+this.videoList.get(0));
             JSONObject jsonObject = new JSONObject(info);
-            this.rotation=jsonObject.getInt("rotation");
-            this.width=jsonObject.getInt("width");
-            this.height=jsonObject.getInt("height");
-            this.timeLength=jsonObject.getInt("duration");//返回毫秒
-            this.fps=jsonObject.getInt("fps");
-            this.videoCodec=jsonObject.getString("videoCodec");
+            rotation=jsonObject.getInt("rotation");
+            width=jsonObject.getInt("width");
+            height=jsonObject.getInt("height");
+            timeLength=jsonObject.getInt("duration");//返回毫秒
+            fps=jsonObject.getInt("fps");
+            videoCodec=jsonObject.getString("videoCodec");
 
         } catch (Exception e) {
             this.status="损坏";
             e.printStackTrace();
         }
-        this.fileNum=this.videoList.size();
-        this.frames=this.timeLength/1000*this.fps;
-        int i=this.videoList.get(0).lastIndexOf("/");
-        i=(i==-1?0:i);
-        this.prefix=this.videoList.get(0).substring(0,i);
+
+        FileReader reader = null;
+        BufferedReader br = null;
+        try{
+            reader=new FileReader(path);
+            br = new BufferedReader(reader);
+            //如果不以#EXTM3U则格式错误
+            String line=br.readLine();
+            if(!line.startsWith("#EXTM3U")){
+                Log.d("err", "M3u8File: file not start with #EXTM3U");
+                return;
+            }
+            while ((line = br.readLine()) != null){
+                if(line.startsWith("#EXTINF:")){
+                    videoList.add(br.readLine());
+                }
+                /*m3u8文件结束符*/
+                else if(line.startsWith("#EXT-X-ENDLIST")){
+                    break;
+                }
+            }
+        }catch (Exception e){
+            this.status="损坏";
+            e.printStackTrace();
+        }finally {
+            br.close();
+            reader.close();
+        }
+        fileNum=videoList.size();
+        frames=timeLength/1000*this.fps;
+        File ts0=new File(videoList.get(0));
+        prefix=ts0.getCanonicalFile().getParent();
     }
 
     public void startConvert(final MainActivity mainActivity)
@@ -150,10 +116,12 @@ public class M3u8File {
         //ffmpeg -allowed_extensions ALL -i index.m3u8 -c copy new.mp4
         File f=new File(convertedFullPath);
         if(f.exists())f.delete();
-        FFmpegCmd.transcode(fullPath, convertedFullPath, new FFmpegCmd.ConvertListener() {
+        final ConvertListener listener= new ConvertListener() {
             @Override
-            public void onProgress(final int progress) {
-                status=String.valueOf(frames==0?progress:progress*100/frames)+"%";
+            public void onProgress(final long progress) {
+                if(mainActivity.radioButtonUseFFmpeg.isChecked())
+                    status=String.valueOf(frames==0?progress:progress*100/frames)+"%";
+                else status=String.valueOf(progress*100/fileNum)+"%";
                 //Log.d(status, "onProgress: ");
                 mainActivity.runOnUiThread(new Runnable() {
                     @Override
@@ -189,25 +157,111 @@ public class M3u8File {
                     }
                 });
             }
-        });
-        //Log.d("retrieveInfo", "startConvert: "+FFmpegCmd.retrieveInfo(fullPath));
+        };
+        final String[] cmd={"ffmpeg","-allowed_extensions","ALL","-i",fullPath,"-c","copy",convertedFullPath};
+        Log.d("FFmpegCmd", "run: " + cmd);
+        //使用ffmpeg进行转码
+        if(mainActivity.radioButtonUseFFmpeg.isChecked()){
+            new Thread()
+            {
+                @Override
+                public void run() {
+                    while(getProgress()==0);
+                    listener.onStart();
+                    for(;;)
+                    {
+                        if(getProgress()==0)
+                        {
+                            listener.onStop();
+                            return;
+                        }
+                        //Log.d("isWorking:", "getprogress: "+String.valueOf(getProgress()));
+                        listener.onProgress(getProgress());
+                        try{
+                            sleep(500);
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }.start();
+            new Thread()
+            {
+                @Override
+                public void run()
+                {
+                    exec(cmd.length, cmd);
+                }
+            }.start();
+        }
+        //使用java进行转码
+        else {
+            new Thread()
+            {
+                @Override
+                public void run() {
+                    while(JavaParser.getProgress()==0);
+                    listener.onStart();
+                    for(;;)
+                    {
+                        if(JavaParser.getProgress()==0)
+                        {
+                            listener.onStop();
+                            return;
+                        }
+                        //Log.d("isWorking:", "getprogress: "+String.valueOf(getProgress()));
+                        listener.onProgress(JavaParser.getProgress());
+                        try{
+                            sleep(500);
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }.start();
+            new Thread()
+            {
+                @Override
+                public void run()
+                {
+                    try {
+                        JavaParser.java_parse_m3u8(new String[]{fullPath});
+                    }catch (Exception e){
+                        Log.d("err", "run: JavaParser.java_parse_m3u8 fail");
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
+        }
     }
+
+    public interface ConvertListener {
+        void onProgress(long progress);
+        void onStart();
+        void onStop();
+    }
+
     //删除旧的m3u8文件
     public void deleteOldFiles()
     {
-        File f=null;
-        if(keyMap.get("URI")!=null)
-        {
-            f=new File(keyMap.get("URI"));
-            f.delete();
+        boolean canDel=true;
+        for(int i=0;i<videoList.size();i++){
+            if(!videoList.get(i).startsWith(prefix)){
+                canDel=false;
+                break;
+            }
         }
-        for(int i=0;i<videoList.size();i++)
-        {
-            f=new File(videoList.get(i));
-            f.delete();
+        File m3u8Dir=new File(prefix);
+        File m3u8File=new File(fullPath);
+        if(canDel && m3u8Dir.exists() && m3u8File.exists()){
+            m3u8Dir.delete();
+            m3u8File.delete();
+        }else{
+            Log.d("err", "deleteOldFiles: can't delete old file");
         }
-        if(f!=null&&f.getParentFile().listFiles().length==0)f.getParentFile().delete();
-        f=new File(fullPath);
-        f.delete();
     }
 }

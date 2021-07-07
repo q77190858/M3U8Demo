@@ -18,7 +18,7 @@ extern "C"{
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_juju_m3u8converter_FFmpegCmd_exec(JNIEnv *env, jclass type, jint cmdLen,
+Java_com_juju_m3u8converter_M3u8File_exec(JNIEnv *env, jclass type, jint cmdLen,
                                              jobjectArray cmd) {
     //set java vm
     JavaVM *jvm = NULL;
@@ -44,13 +44,13 @@ Java_com_juju_m3u8converter_FFmpegCmd_exec(JNIEnv *env, jclass type, jint cmdLen
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_juju_m3u8converter_FFmpegCmd_getProgress(JNIEnv *env, jclass clazz) {
+Java_com_juju_m3u8converter_M3u8File_getProgress(JNIEnv *env, jclass clazz) {
     return get_progress();
 }
 
 extern "C"
 JNIEXPORT jdouble JNICALL
-Java_com_juju_m3u8converter_FFmpegCmd_getSpeed(JNIEnv *env, jclass clazz) {
+Java_com_juju_m3u8converter_M3u8File_getSpeed(JNIEnv *env, jclass clazz) {
     return get_speed();
 }
 /*说明：
@@ -58,7 +58,7 @@ Java_com_juju_m3u8converter_FFmpegCmd_getSpeed(JNIEnv *env, jclass clazz) {
  * 邮箱：296768324@qq.com*/
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_juju_m3u8converter_FFmpegCmd_retrieveInfo(JNIEnv *env, jclass clazz, jstring _path) {
+Java_com_juju_m3u8converter_M3u8File_retrieveInfo(JNIEnv *env, jclass clazz, jstring _path) {
     const char* path=env->GetStringUTFChars(_path, JNI_FALSE);
     AVFormatContext* ctx = nullptr;
 
